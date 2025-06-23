@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -16,11 +15,6 @@ use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
-    /** 
-     * Write code on Method 
-     * 
-     * @return response() 
-     */
     public function index()
     {
         return view('auth.login');
@@ -41,31 +35,29 @@ class AuthController extends Controller
      * 
      * @return response() 
      */
-    public function postLogin(Request $request)
-    {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
+public function postLogin(Request $request)
+{
+    $request->validate([
+        'email' => 'required',
+        'password' => 'required',
+    ]);
 
-        $credentials = $request->only(
-            'email',
-            'password'
-        );
-        if (Auth::attempt($credentials)) {
-            if (Auth::user()->hasRole('Admin')) {
-                return redirect()->intended('dashboard')
-                    ->withSuccess('You have Successfully loggedin');
-            } else {
-                return redirect()->intended('/landing')
-                    ->withSuccess('You have Successfully loggedin');
-            }
+    $credentials = $request->only('email', 'password');
+
+    if (Auth::attempt($credentials)) {
+        if (Auth::user()->hasRole('Admin')) {
+            return redirect()->intended('dashboard')
+                ->with('success', 'Login berhasil sebagai Admin!');
+        } else {
+            return redirect()->intended('/landing')
+                ->with('success', 'Login berhasil sebagai User!');
         }
-
-        return redirect("login")->withSuccess('Oppes! You have entered invalid credentials');
-
-        return redirect()->route('dashboard')->with('success', 'Login berhasil!');
     }
+
+    // Jika gagal login
+    return redirect("login")->with('error', 'Oops! Email atau password salah.');
+}
+
 
     /** 
      * Write code on Method 
