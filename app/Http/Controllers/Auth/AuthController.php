@@ -74,8 +74,9 @@ public function postLogin(Request $request)
 
         $data = $request->all();
         $check = $this->create($data);
-
-        return redirect("dashboard")->withSuccess('Great! You have Successfully loggedin');
+        
+        
+        return redirect("/login")->withSuccess('Great! You have Successfully loggedin');
     }
 
     /** 

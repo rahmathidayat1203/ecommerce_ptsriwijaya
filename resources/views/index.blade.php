@@ -254,7 +254,7 @@
             <div class="col-md-2">
                 <div class="main-logo">
                     <a href="index.html">
-                        <img src="/booksaw/images/logo PT.png" alt="logo" class="img-fluid"
+                        <img src="/booksaw/images/logo_pt.png" alt="logo" class="img-fluid"
                             style="max-height: 50px;">
                     </a>
                 </div>
@@ -497,6 +497,7 @@
                                     <div class="col-md-3 mb-4">
                                         <div class="product-item card border-0 shadow-sm h-100">
                                             <figure class="product-style m-0">
+                
                                                 <img src="{{ asset($product->foto) }}" alt="Produk"
                                                     class="card-img-top" style="height: 250px; object-fit: cover;">
                                                 <figcaption class="p-3">

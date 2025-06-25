@@ -20,6 +20,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
+            @if($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 
             <div class="card-body">
                 <!-- Tempat munculnya error jika ada -->
@@ -144,7 +154,11 @@
                             <label>Ciri-Ciri</label>
                             <textarea name="ciri_ciri" class="form-control" rows="3" required></textarea>
                         </div>
-                        <div class="col-12">
+                        <!-- Tombol Daftar dan Kembali -->
+                        <div class="col-12 d-flex justify-content-between">
+                            <a href="{{ url('/landing') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Kembali ke Beranda
+                            </a>
                             <button type="submit" class="btn btn-success">Daftar</button>
                         </div>
                     </div>
