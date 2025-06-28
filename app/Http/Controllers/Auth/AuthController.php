@@ -35,51 +35,36 @@ class AuthController extends Controller
      * 
      * @return response() 
      */
-public function postLogin(Request $request)
-{
-    $request->validate([
-        'email' => 'required',
-        'password' => 'required',
-    ]);
 
-    $credentials = $request->only('email', 'password');
+    public function postLogin(Request $request)
+    {
+        // dd($request->all());
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
 
-    if (Auth::attempt($credentials)) {
-        if (Auth::user()->hasRole('Admin')) {
-            return redirect()->intended('dashboard')
-                ->with('success', 'Login berhasil sebagai Admin!');
-        } else {
-            return redirect()->intended('/landing')
-                ->with('success', 'Login berhasil sebagai User!');
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            if (Auth::user()->hasRole('Admin')) {
+                return redirect()->intended('dashboard')
+                    ->with('success', 'Login berhasil sebagai Admin!');
+            } else {
+                return redirect()->intended('/landing')
+                    ->with('success', 'Login berhasil sebagai User!');
+            }
         }
+
+        // Jika gagal login
+        return redirect("login")->with('error', 'Oops! Email atau password salah.');
     }
-
-    // Jika gagal login
-    return redirect("login")->with('error', 'Oops! Email atau password salah.');
-
-}
 
 
     /** 
      * Write code on Method 
      * 
      * @return response() 
-     */
-    public function postRegistration(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-        ]);
-
-        $data = $request->all();
-        $check = $this->create($data);
-        
-        
-        return redirect("/login")->withSuccess('Great! You have Successfully loggedin');
-    }
-
     /** 
      * Write code on Method 
      * 

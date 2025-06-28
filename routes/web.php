@@ -8,6 +8,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\PDFController;
+use App\Http\Controllers\CetakJamaahController;
 use App\Http\Controllers\PembeliController;
 use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\ReviewController;
@@ -66,6 +68,8 @@ Route::get('order-list', [OrderController::class, 'order_list'])->name('order.li
 Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
 // Route::post('/order/pay', [OrderController::class, 'pay'])->name('order.pay');
 Route::post('/order/pay', [OrderController::class, 'pay'])->name('order.pay');
+Route::get('cetak-pdf', [CetakJamaahController::class, 'cetakPDF'])->name('cetak.pdf');
+Route::get('cetak-pdf-by/{id}', [CetakJamaahController::class, 'cetak_jamaah_by_id'])->name('pembelian.cetakbyid');
 // Route::post('/checkout/pay', [OrderController::class, 'pay'])->name('order.pay');
 // Route::post('/payment/store', [PaymentController::class, 'store'])->name('payement_store');
 // Kirim ke halaman form konfirmasi pembayaran
