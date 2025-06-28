@@ -56,6 +56,7 @@ public function postLogin(Request $request)
 
     // Jika gagal login
     return redirect("login")->with('error', 'Oops! Email atau password salah.');
+
 }
 
 

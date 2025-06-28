@@ -18,7 +18,9 @@
                 <h5 class="mb-0">Daftar Review</h5>
             </div>
             <div class="card-body">
+                <div class="table-responsive">
                 <table class="table table-bordered data-table" id="review-table">
+                    <thead class="table-light">
                     <thead>
                         <tr>
                             <th>No</th>

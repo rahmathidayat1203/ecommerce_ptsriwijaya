@@ -30,7 +30,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $key => $user)
+                            @php $i = ($data->currentPage() - 1) * $data->perPage(); @endphp
+                            @foreach ($data as $user)
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>{{ $user->name }}</td>
@@ -62,10 +63,11 @@
                         </tbody>
                     </table>
 
-                    {{-- Pagination --}}
-                    <div class="mt-3">
-                        {!! $data->render() !!}
+                    <!-- Pagination ke kanan -->
+                    <div class="d-flex justify-content-end mt-3">
+                        {{ $data->links('pagination::bootstrap-5') }}
                     </div>
+
                 </div>
             </div>
         </div>

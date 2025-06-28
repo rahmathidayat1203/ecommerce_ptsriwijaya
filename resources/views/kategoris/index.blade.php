@@ -19,7 +19,9 @@
                 <h5 class="mb-0">Daftar Kategori</h5>
             </div>
             <div class="card-body">
+                  <div class="table-responsive">
                 <table class="table table-bordered data-table" id="kategori-table">
+                    <thead class="table-light">
                     <thead>
                         <tr>
                             <th>No</th>
