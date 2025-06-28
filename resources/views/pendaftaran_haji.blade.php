@@ -14,6 +14,7 @@
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">Formulir Pendaftaran Haji</h4>
             </div>
+
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
@@ -21,18 +22,21 @@
                 </div>
             @endif
 
-            <div class="card-body">
-                <!-- Tempat munculnya error jika ada -->
-                <div class="alert alert-danger d-none" id="form-errors">
-                    <strong>Terjadi kesalahan:</strong>
-                    <ul class="mb-0" id="error-list">
-                        <!-- Pesan error akan muncul di sini -->
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
                     </ul>
                 </div>
+            @endif
 
-                <form action="{{ route('submit.form') }}" method="POST">
+            <div class="card-body">
+                <form action="{{ route('submit.form') }}" method="POST" enctype="multipart/form-data" id="hajiForm">
                     @csrf
                     <div class="row">
+                        <!-- Data Jamaah -->
                         <div class="col-md-6 mb-3">
                             <label>Nomor Ktp</label>
                             <input type="text" name="nomor_ktp" class="form-control" required>
@@ -144,7 +148,18 @@
                             <label>Ciri-Ciri</label>
                             <textarea name="ciri_ciri" class="form-control" rows="3" required></textarea>
                         </div>
-                        <div class="col-12">
+
+                        <!-- Foto -->
+                        <div class="col-md-6 mb-3">
+                            <label>Upload Foto (3x4)</label>
+                            <input type="file" name="foto" class="form-control" accept="image/*" required>
+                        </div>
+
+                        <!-- Tombol -->
+                        <div class="col-12 d-flex justify-content-between">
+                            <a href="{{ url('/landing') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Kembali ke Beranda
+                            </a>
                             <button type="submit" class="btn btn-success">Daftar</button>
                         </div>
                     </div>
@@ -153,39 +168,8 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS + form validasi sederhana -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('hajiForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            let errors = [];
-            const requiredFields = this.querySelectorAll('[required]');
-
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    const label = field.closest('.mb-3').querySelector('label').innerText;
-                    errors.push(label + ' wajib diisi.');
-                }
-            });
-
-            const errorDiv = document.getElementById('form-errors');
-            const errorList = document.getElementById('error-list');
-            errorList.innerHTML = '';
-
-            if (errors.length > 0) {
-                errors.forEach(err => {
-                    const li = document.createElement('li');
-                    li.textContent = err;
-                    errorList.appendChild(li);
-                });
-                errorDiv.classList.remove('d-none');
-            } else {
-                errorDiv.classList.add('d-none');
-                alert('Form berhasil dikirim!');
-                this.reset();
-            }
-        });
-    </script>
 </body>
 
 </html>

@@ -16,11 +16,6 @@ use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
-    /** 
-     * Write code on Method 
-     * 
-     * @return response() 
-     */
     public function index()
     {
         return view('auth.login');
@@ -43,29 +38,28 @@ class AuthController extends Controller
      */
     public function postLogin(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'email' => 'required',
             'password' => 'required',
         ]);
 
-        $credentials = $request->only(
-            'email',
-            'password'
-        );
+        $credentials = $request->only('email', 'password');
+
         if (Auth::attempt($credentials)) {
             if (Auth::user()->hasRole('Admin')) {
                 return redirect()->intended('dashboard')
-                    ->withSuccess('You have Successfully loggedin');
+                    ->with('success', 'Login berhasil sebagai Admin!');
             } else {
                 return redirect()->intended('/landing')
-                    ->withSuccess('You have Successfully loggedin');
+                    ->with('success', 'Login berhasil sebagai User!');
             }
         }
 
-        return redirect("login")->withSuccess('Oppes! You have entered invalid credentials');
-
-        return redirect()->route('dashboard')->with('success', 'Login berhasil!');
+        // Jika gagal login
+        return redirect("login")->with('error', 'Oops! Email atau password salah.');
     }
+
 
     /** 
      * Write code on Method 
@@ -83,7 +77,8 @@ class AuthController extends Controller
         $data = $request->all();
         $check = $this->create($data);
 
-        return redirect("dashboard")->withSuccess('Great! You have Successfully loggedin');
+
+        return redirect("/login")->withSuccess('Great! You have Successfully loggedin');
     }
 
     /** 

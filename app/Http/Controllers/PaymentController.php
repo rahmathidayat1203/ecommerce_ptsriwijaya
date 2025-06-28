@@ -53,10 +53,14 @@ class PaymentController extends Controller
 
                     // Tombol Approve
                     if (Auth::user()->can('payment-approve')) {
-                        $btn .= '<form action="' . route('payments.approve', $row->id) . '" method="POST" style="display:inline-block; margin-right: 5px;">'
+                        if($row->status != "success"){
+                            $btn .= '<form action="' . route('payments.approve', $row->id) . '" method="POST" style="display:inline-block; margin-right: 5px;">'
                             . csrf_field()
                             . '<button type="submit" class="btn btn-success btn-sm" onclick="return confirm(\'Yakin ingin menyetujui pembayaran ini?\')">Approve</button>'
                             . '</form>';
+                        }
+			
+                        
                     }
 
                     // Tombol Delete

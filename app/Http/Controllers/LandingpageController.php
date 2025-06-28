@@ -29,7 +29,7 @@ class LandingpageController extends Controller
                     ])->withHeaders([
                         'Accept' => 'application/json',
                         'Content-Type' => 'application/json'
-                    ])->post('https://127.0.0.1:5000/predict', [
+                    ])->post('https://dimas123.pythonanywhere.com/predict', [
                         'komentar' => $review->komentar
                     ]);
 
