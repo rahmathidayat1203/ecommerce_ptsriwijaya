@@ -8,7 +8,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\PDFController;
 use App\Http\Controllers\CetakJamaahController;
 use App\Http\Controllers\PembeliController;
 use App\Http\Controllers\PengirimanController;
