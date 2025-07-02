@@ -24,7 +24,7 @@ class AuthController extends Controller
     public function registration()
     {
         return view('auth.registration');
-    }
+
 
     public function postRegistration(Request $request)
     {
@@ -52,6 +52,7 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Registrasi berhasil dan Anda telah login!');
     }
 
+ 
     public function postLogin(Request $request)
     {
         $request->validate([
