@@ -1,13 +1,14 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\PendaftaranHaji;
 use App\Models\Produk;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -20,25 +21,39 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    /** 
-     * Write code on Method 
-     * 
-     * @return response() 
-     */
     public function registration()
     {
         return view('auth.registration');
     }
 
-    /** 
-     * Write code on Method 
-     * 
-     * @return response() 
-     */
+    public function postRegistration(Request $request)
+    {
+        // ✅ Validasi input dengan konfirmasi password
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|min:8', // ← ini wajib cocok dengan password_confirmation
+        ]);
+
+        // ✅ Simpan user
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        // ✅ Assign role
+        $role = Role::findByName('User');
+        $user->assignRole($role);
+
+        // ✅ Login otomatis
+        Auth::login($user);
+
+        return redirect()->route('login')->with('success', 'Registrasi berhasil dan Anda telah login!');
+    }
 
     public function postLogin(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'email' => 'required',
             'password' => 'required',
@@ -56,24 +71,14 @@ class AuthController extends Controller
             }
         }
 
-        // Jika gagal login
         return redirect("login")->with('error', 'Oops! Email atau password salah.');
     }
 
-
-    /** 
-     * Write code on Method 
-     * 
-     * @return response() 
-    /** 
-     * Write code on Method 
-     * 
-     * @return response() 
-     */
     public function dashboard()
     {
         $produk = Produk::count();
         $order = Order::count();
+
         $pendaftaranPerBulan = PendaftaranHaji::select(
             DB::raw("DATE_FORMAT(created_at, '%Y-%m') as bulan"),
             DB::raw("COUNT(*) as total")
@@ -85,20 +90,13 @@ class AuthController extends Controller
         $labels = $pendaftaranPerBulan->pluck('bulan');
         $data = $pendaftaranPerBulan->pluck('total');
 
-        // dd($produk);
         if (Auth::check()) {
             return view('auth.dashboard', compact('produk', 'order', 'labels', 'data'));
         }
 
-        return redirect("login")->withSuccess('Opps! 
-        You do not have access');
+        return redirect("login")->with('error', 'Oops! Anda tidak memiliki akses.');
     }
 
-    /** 
-     * Write code on Method 
-     * 
-     * @return response() 
-     */
     public function create(array $data)
     {
         $user = User::create([
@@ -117,16 +115,11 @@ class AuthController extends Controller
         return view('auth.profile');
     }
 
-    /** 
-     * Write code on Method 
-     * 
-     * @return response() 
-     */
     public function logout()
     {
         Session::flush();
         Auth::logout();
 
-        return Redirect('login');
+        return redirect('login');
     }
 }
