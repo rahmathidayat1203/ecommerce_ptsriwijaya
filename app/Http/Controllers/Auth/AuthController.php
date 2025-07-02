@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -35,7 +36,24 @@ class AuthController extends Controller
      * 
      * @return response() 
      */
+    public function postRegistration(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|',
+        ]);
 
+        $user = \App\Models\User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+
+        auth()->login($user);
+
+        return redirect()->route('login'); // atau redirect ke halaman setelah login
+    }
     public function postLogin(Request $request)
     {
         // dd($request->all());
