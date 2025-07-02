@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" manifest="/manifest.json">
 
 <head>
     <title>PT. Sriwijaya Mega Wisata</title>
@@ -8,9 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#ffffff">
     <meta name="author" content="">
     <meta name="keywords" content="">
     <meta name="description" content="">
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Add to Home Screen Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/booksaw/images/logo_pt.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/booksaw/images/logo_pt.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/booksaw/images/logo_pt.png">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
@@ -34,8 +42,31 @@
     @laravelPWA
 
     <style>
+        /* Existing styles remain the same, only adding PWA-specific adjustments if needed */
+        body.offline {
+            background-color: #f8f9fa;
+            position: relative;
+        }
+
+        body.offline::after {
+            content: "Offline Mode";
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #dc3545;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        /* Rest of your existing CSS remains unchanged */
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         img {
@@ -60,9 +91,15 @@
             height: 100%;
         }
 
+        #haji-slider {
+            position: relative;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+        }
+
         #haji-slider .col-12 {
             position: relative;
-            padding: 0 15px;
+            padding: 0 clamp(10px, 2vw, 15px);
         }
 
         .slick-arrow {
@@ -72,63 +109,104 @@
             background: #ff7043;
             border: none;
             color: white;
-            width: 40px;
-            height: 40px;
+            width: clamp(30px, 3vw, 40px);
+            height: clamp(30px, 3vw, 40px);
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
             z-index: 10;
-            font-size: 1rem;
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .slick-arrow:hover {
             background: #ff5722;
+            transform: translateY(-50%) scale(1.1);
         }
 
         .prev {
-            left: 10px;
+            left: clamp(10px, 1vw, 15px);
         }
 
         .next {
-            right: 10px;
+            right: clamp(10px, 1vw, 15px);
+        }
+
+        .main-slider {
+            position: relative;
+            overflow: hidden;
         }
 
         .slider-item {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: clamp(20px, 3vw, 30px);
+            padding: clamp(20px, 3vw, 30px);
             border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            max-height: 600px;
             overflow: hidden;
-            transition: transform 0.5s ease;
+            transition: transform 0.5s ease, box-shadow 0.3s ease;
+        }
+
+        .slider-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
 
         .banner-content {
             flex: 1;
+            padding: clamp(10px, 2vw, 20px);
+            max-width: clamp(300px, 40vw, 500px);
         }
 
+        /* PERBAIKAN KHUSUS UNTUK TEKS "Haji Khusus" */
         .banner-title {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
             font-weight: 700;
-            margin-bottom: 15px;
             color: #ff5722;
+            margin-bottom: clamp(10px, 2vw, 15px);
+            line-height: 1.3;
+            /* Menghapus pemecahan kata */
+            word-break: normal;
+            overflow-wrap: normal;
+            /* Menjaga kata tetap utuh */
+            white-space: nowrap;
+        }
+
+        .banner-title span {
+            display: inline-block;
         }
 
         .service_list {
             list-style: none;
             padding: 0;
-            margin: 0 0 20px 0;
-            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            margin: 0 0 clamp(15px, 2vw, 20px) 0;
+            font-size: clamp(0.8rem, 1.5vw, 1.1rem);
             line-height: 1.6;
             color: #444;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: clamp(5px, 1vw, 10px);
+        }
+
+        .service_list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .service_list::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 10px;
         }
 
         .service_list li {
             position: relative;
-            padding-left: 25px;
-            margin-bottom: 10px;
+            padding-left: clamp(20px, 2.5vw, 25px);
+            margin-bottom: clamp(8px, 1vw, 10px);
             cursor: default;
             transition: color 0.3s ease;
         }
@@ -139,7 +217,7 @@
             top: 50%;
             transform: translateY(-50%);
             color: #ff7043;
-            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-size: clamp(0.9rem, 1.5vw, 1.3rem);
         }
 
         .service_list li:hover {
@@ -148,20 +226,21 @@
         }
 
         .btn-wrap {
-            margin-top: 10px;
+            margin-top: clamp(10px, 2vw, 15px);
         }
 
         .btn-outline-accent {
             display: inline-flex;
             align-items: center;
-            padding: clamp(8px, 2vw, 10px) clamp(18px, 4vw, 22px);
+            padding: clamp(6px, 1.5vw, 10px) clamp(12px, 3vw, 22px);
             border: 2px solid #ff5722;
             color: #ff5722;
             font-weight: 600;
             border-radius: 30px;
             text-decoration: none;
             transition: all 0.3s ease;
-            font-size: clamp(0.8rem, 2vw, 1rem);
+            font-size: clamp(0.7rem, 1.5vw, 1rem);
+            background: transparent;
         }
 
         .btn-outline-accent:hover {
@@ -170,7 +249,7 @@
         }
 
         .btn-outline-accent i {
-            margin-left: 8px;
+            margin-left: clamp(5px, 1vw, 8px);
             transition: transform 0.3s ease;
         }
 
@@ -179,27 +258,25 @@
         }
 
         .banner-image {
-            max-width: 100%;
+            flex: 1;
+            max-width: clamp(300px, 30vw, 500px);
+            height: auto;
             border-radius: 15px;
             object-fit: cover;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.5s ease;
-            aspect-ratio: 16 / 9;
         }
 
         .slider-item:hover .banner-image {
             transform: scale(1.05);
         }
 
-        .menu-list {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-        }
-
         .hamburger {
             display: none;
             cursor: pointer;
+            background: transparent;
+            border: none;
+            padding: 5px;
         }
 
         .hamburger .bar {
@@ -211,208 +288,371 @@
             transition: all 0.3s ease;
         }
 
+        /* Improved mobile menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            padding-top: 60px;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu .nav-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .mobile-menu .nav-link {
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .mobile-menu .nav-link:hover {
+            color: #ff5722;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Responsive adjustments */
         @media (max-width: 991px) {
             .slider-item {
                 flex-direction: column;
                 text-align: center;
-                padding: 10px;
+                padding: clamp(15px, 2vw, 20px);
+                max-height: 100%;
+            }
+
+            .banner-content {
+                max-width: 100%;
+                padding: clamp(10px, 2vw, 15px);
             }
 
             .banner-image {
-                max-height: 250px;
-                margin-top: 15px;
-            }
-
-            #haji-slider .col-12 {
-                padding: 0 10px;
-            }
-
-            .slick-arrow {
-                width: 35px;
-                height: 35px;
-                font-size: 14px;
-            }
-
-            .prev {
-                left: 5px;
-            }
-
-            .next {
-                right: 5px;
-            }
-
-            .banner-title {
-                font-size: clamp(1.2rem, 4vw, 2rem);
+                max-width: 100%;
+                max-height: 300px;
+                margin-top: clamp(15px, 2vw, 20px);
             }
 
             .service_list {
-                font-size: clamp(0.8rem, 2.5vw, 1rem);
+                max-height: 200px;
+                margin: 0 auto;
+                max-width: 90%;
             }
 
-            .service_list li {
-                padding-left: 20px;
+            .slick-arrow {
+                width: clamp(25px, 2.5vw, 35px);
+                height: clamp(25px, 2.5vw, 35px);
+                font-size: clamp(0.7rem, 1.2vw, 14px);
             }
 
-            .service_list li i {
-                font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            .prev {
+                left: clamp(5px, 1vw, 10px);
             }
 
-            .btn-outline-accent {
-                padding: clamp(6px, 2vw, 8px) clamp(12px, 3vw, 18px);
-                font-size: clamp(0.7rem, 2vw, 0.9rem);
-            }
-
-            .menu-list {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                background: #fff;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                z-index: 1000;
-            }
-
-            .menu-list.show {
-                display: flex;
-            }
-
-            .menu-list li {
-                text-align: center;
-                padding: 10px 0;
+            .next {
+                right: clamp(5px, 1vw, 10px);
             }
 
             .hamburger {
                 display: block;
             }
+
+            #navbar .menu-list {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            /* PERBAIKAN KHUSUS UNTUK TEKS "Haji Khusus" PADA MOBILE */
+            .banner-title {
+                white-space: normal;
+                /* Mengizinkan wrap jika diperlukan */
+                line-height: 1.4;
+                font-size: clamp(1.4rem, 4vw, 1.8rem);
+            }
+
+            .banner-title span {
+                display: inline;
+            }
         }
 
         @media (max-width: 768px) {
             .banner-title {
-                font-size: clamp(1.2rem, 4vw, 1.8rem);
+                font-size: clamp(1.3rem, 4.5vw, 1.6rem);
             }
 
             .service_list {
-                font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+                font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+                max-height: 180px;
             }
 
             .service_list li {
-                padding-left: 15px;
+                padding-left: clamp(15px, 2vw, 20px);
             }
 
             .service_list li i {
-                font-size: clamp(0.8rem, 2.5vw, 1rem);
+                font-size: clamp(0.8rem, 1.5vw, 1.1rem);
             }
 
             .btn-outline-accent {
-                padding: clamp(5px, 2vw, 7px) clamp(10px, 3vw, 16px);
-                font-size: clamp(0.6rem, 2vw, 0.85rem);
+                padding: clamp(5px, 1.5vw, 8px) clamp(10px, 2.5vw, 18px);
+                font-size: clamp(0.6rem, 1.5vw, 0.85rem);
             }
 
             .banner-image {
-                max-height: 200px;
+                max-height: 250px;
+            }
+
+            /* Podcast section */
+            .product-item {
+                margin-bottom: 30px;
+            }
+
+            /* Products section */
+            .col-12.col-md-3 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
+            /* Footer */
+            .footer-item {
+                padding: 0 15px;
+            }
+        }
+
+        /* PERUBAHAN UTAMA UNTUK TABLET (768px - 991px) */
+        @media (min-width: 768px) and (max-width: 991px) {
+            .slider-item {
+                padding: 0;
+                max-height: 400px;
+                border-radius: 0;
+                box-shadow: none;
+                background: transparent;
+                flex-direction: row;
+                align-items: stretch;
+            }
+
+            .banner-content {
+                display: none;
+                /* Sembunyikan teks di tablet */
+            }
+
+            .banner-image {
+                max-width: 100%;
+                max-height: none;
+                height: 400px;
+                border-radius: 0;
+                margin-top: 0;
+                box-shadow: none;
+                width: 100%;
+                object-fit: cover;
+            }
+
+            /* Perbesar tombol navigasi di tablet */
+            .slick-arrow {
+                width: 50px;
+                height: 50px;
+                background: rgba(255, 112, 67, 0.8);
+                z-index: 100;
+                font-size: 1.2rem;
+            }
+
+            .prev {
+                left: 20px;
+            }
+
+            .next {
+                right: 20px;
+            }
+
+            /* Hilangkan titik navigasi di tablet */
+            .slick-dots {
+                display: none !important;
+            }
+        }
+
+        /* PERUBAHAN UTAMA UNTUK MOBILE (di bawah 768px) */
+        @media (max-width: 767px) {
+            .slider-item {
+                padding: 0;
+                max-height: 300px;
+                border-radius: 0;
+                box-shadow: none;
+                background: transparent;
+                flex-direction: row;
+                align-items: stretch;
+            }
+
+            .banner-content {
+                display: none;
+                /* Sembunyikan teks di mobile */
+            }
+
+            .banner-image {
+                max-width: 100%;
+                max-height: none;
+                height: 300px;
+                border-radius: 0;
+                margin-top: 0;
+                box-shadow: none;
+                width: 100%;
+                object-fit: cover;
+            }
+
+            /* Perbesar tombol navigasi di mobile */
+            .slick-arrow {
+                width: 40px;
+                height: 40px;
+                background: rgba(255, 112, 67, 0.8);
+                z-index: 100;
+            }
+
+            .prev {
+                left: 10px;
+            }
+
+            .next {
+                right: 10px;
+            }
+
+            /* Hilangkan titik navigasi di mobile */
+            .slick-dots {
+                display: none !important;
+            }
+
+            .banner-title {
+                font-size: clamp(1.2rem, 5vw, 1.4rem);
+                margin-bottom: 8px;
+            }
+
+            .service_list {
+                font-size: clamp(0.6rem, 1.5vw, 0.85rem);
+                max-height: 150px;
+            }
+
+            .service_list li {
+                padding-left: clamp(12px, 1.5vw, 15px);
+            }
+
+            .service_list li i {
+                font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+            }
+
+            .btn-outline-accent {
+                padding: clamp(4px, 1vw, 6px) clamp(8px, 2vw, 14px);
+                font-size: clamp(0.5rem, 1.2vw, 0.8rem);
             }
         }
 
         @media (max-width: 576px) {
             .slider-item {
-                padding: 5px;
-            }
-
-            .banner-title {
-                font-size: clamp(1rem, 4vw, 1.5rem);
-            }
-
-            .service_list {
-                font-size: clamp(0.6rem, 2.5vw, 0.85rem);
-            }
-
-            .service_list li {
-                padding-left: 12px;
-            }
-
-            .service_list li i {
-                font-size: clamp(0.7rem, 2.5vw, 0.9rem);
-            }
-
-            .btn-outline-accent {
-                padding: clamp(4px, 2vw, 6px) clamp(8px, 3vw, 14px);
-                font-size: clamp(0.5rem, 2vw, 0.8rem);
+                max-height: 250px;
             }
 
             .banner-image {
-                max-height: 150px;
-            }
-
-            .slick-arrow {
-                width: 25px;
-                height: 25px;
-                font-size: 12px;
-            }
-
-            .prev {
-                left: 2px;
-            }
-
-            .next {
-                right: 2px;
-            }
-
-            .modal-dialog {
-                margin: 0.5rem;
-            }
-
-            .modal-content {
-                padding: 10px;
-            }
-
-            .modal-title {
-                font-size: 1rem;
-            }
-
-            .modal-body {
-                font-size: 0.8rem;
-            }
-
-            .modal-footer .btn {
-                font-size: 0.7rem;
-                padding: 5px 10px;
+                height: 250px;
             }
         }
 
         @media (max-width: 400px) {
+            .banner-image {
+                height: 200px;
+            }
+
             .banner-title {
-                font-size: 1rem;
+                font-size: clamp(1.1rem, 5.5vw, 1.3rem);
+            }
+
+            .service_list li {
+                font-size: 0.8rem;
             }
 
             .btn-outline-accent {
-                padding: 4px 8px;
-                font-size: 0.6rem;
+                padding: clamp(3px, 0.8vw, 5px) clamp(6px, 1.5vw, 10px);
+                font-size: clamp(0.4rem, 1vw, 0.6rem);
             }
 
-            .banner-image {
-                max-height: 120px;
+            /* Header adjustments */
+            .main-logo img {
+                max-height: 35px !important;
             }
         }
 
         @media (min-width: 1200px) {
             .banner-title {
-                font-size: 3rem;
+                font-size: clamp(2.5rem, 3vw, 3rem);
             }
 
             .banner-image {
-                max-width: 500px;
+                max-width: clamp(400px, 30vw, 500px);
             }
 
             #haji-slider .col-12 {
-                padding: 0 80px;
+                padding: 0 clamp(50px, 5vw, 80px);
             }
         }
     </style>
 </head>
 
 <body>
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    }).catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // Check offline status and update UI
+        function updateOnlineStatus() {
+            document.body.classList.toggle('offline', !navigator.onLine);
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+    </script>
+
     @if (session('success'))
         <script>
             Swal.fire({
@@ -428,17 +668,17 @@
     <header id="header" class="bg-light shadow-sm">
         <div class="container-fluid">
             <div class="row align-items-center py-2">
-                <div class="col-md-2">
+                <div class="col-6 col-md-2">
                     <div class="main-logo">
                         <a href="index.html">
                             <img src="/booksaw/images/logo_pt.png" alt="Logo PT Sriwijaya Mega Wisata" class="img-fluid"
-                                style="max-height: 50px;" loading="lazy">
+                                style="max-height: clamp(40px, 5vw, 50px);" loading="lazy">
                         </a>
                     </div>
                 </div>
-                <div class="col-md-10 d-flex justify-content-between align-items-center">
+                <div class="col-6 col-md-10 d-flex justify-content-end align-items-center">
                     <nav id="navbar" class="d-flex align-items-center w-100">
-                        <ul class="menu-list nav me-auto">
+                        <ul class="menu-list nav me-auto d-none d-lg-flex">
                             <li class="nav-item">
                                 <a href="#home" class="nav-link active px-3">Home</a>
                             </li>
@@ -455,36 +695,74 @@
                                 <a href="{{ route('show.form') }}" class="nav-link px-3">Pendaftaran Haji</a>
                             </li>
                         </ul>
-                        <form id="logout-form" action="{{ route('logout') }}" method="GET"
-                            class="mb-0 ms-3 d-flex align-items-center">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-danger btn-sm px-4"
-                                aria-label="Logout">Logout</button>
-                        </form>
-                        <div class="hamburger d-md-none ms-3" role="button" tabindex="0" aria-label="Toggle menu">
+                        @if (Auth::check())
+                            <form id="logout-form" action="{{ route('logout') }}" method="GET"
+                                class="mb-0 ms-3 d-flex align-items-center">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-danger btn-sm px-4"
+                                    style="font-size: clamp(0.6rem, 1vw, 0.8rem); padding: clamp(2px, 0.5vw, 4px) clamp(8px, 1.5vw, 12px);"
+                                    aria-label="Logout">Logout</button>
+                            </form>
+                        @endif
+                        <button class="hamburger d-lg-none" id="mobileMenuToggle" aria-label="Toggle menu">
                             <span class="bar"></span>
                             <span class="bar"></span>
                             <span class="bar"></span>
-                        </div>
+                        </button>
                     </nav>
                 </div>
             </div>
         </div>
     </header>
 
+    <!-- Mobile Menu -->
+    <div class="overlay" id="overlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a href="#home" class="nav-link active">Home</a>
+            </li>
+            <li class="nav-item">
+                <a href="#Podcast" class="nav-link">Podcast</a>
+            </li>
+            <li class="nav-item">
+                <a href="#Produk" class="nav-link">Produk</a>
+            </li>
+            <li class="nav-item">
+                <a href="#Review" class="nav-link">Review</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('show.form') }}" class="nav-link">Pendaftaran Haji</a>
+            </li>
+            @if (Auth::check())
+                <li class="nav-item mt-3">
+                    <form id="logout-form-mobile" action="{{ route('logout') }}" method="GET">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger w-100">Logout</button>
+                    </form>
+                </li>
+            @endif
+        </ul>
+    </div>
+
     @if (session('success'))
-        <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="successModalLabel">Success</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="successModalLabel"
+                            style="font-size: clamp(0.8rem, 1.5vw, 1rem);">Success</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style="font-size: clamp(0.6rem, 1vw, 0.8rem);">
                         {{ session('success') }}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                            style="font-size: clamp(0.5rem, 0.8vw, 0.7rem); padding: clamp(2px, 0.5vw, 5px) clamp(5px, 1vw, 10px);">OK</button>
                     </div>
                 </div>
             </div>
@@ -507,7 +785,10 @@
                     <div class="main-slider pattern-overlay">
                         <div class="slider-item">
                             <div class="banner-content">
-                                <h2 class="banner-title">Haji Khusus</h2>
+                                <!-- PERBAIKAN UTAMA: Struktur baru untuk teks "Haji Khusus" -->
+                                <h2 class="banner-title">
+                                    <span>Haji</span> <span>Khusus</span>
+                                </h2>
                                 <ul class="service_list">
                                     <li><i class="bx bxs-check-circle-service_list-icon"></i>Hotel Makkah *5 Swiss Al
                                         Maqom/Movenpick/Sofwah dhorar/Dhufron Safwah</li>
@@ -569,7 +850,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <div class="section-header align-center">
+                    <div class="section-header align-center text-center">
                         <div class="title">
                             <span>Podcast PT Sriwijaya Mega Wisata</span>
                         </div>
@@ -577,7 +858,7 @@
                     </div>
                     <div class="product-list" data-aos="fade-up">
                         <div class="row">
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-4 mb-4">
                                 <div class="product-item">
                                     <figure class="product-style">
                                         <div class="video-container">
@@ -589,7 +870,7 @@
                                     </figcaption>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-4 mb-4">
                                 <div class="product-item">
                                     <figure class="product-style">
                                         <div class="video-container">
@@ -601,7 +882,7 @@
                                     </figcaption>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-4 mb-4">
                                 <div class="product-item">
                                     <figure class="product-style">
                                         <div class="video-container">
@@ -624,7 +905,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <div class="section-header align-center">
+                    <div class="section-header align-center text-center">
                         <div class="title">
                             <span>Produk PT Sriwijaya Mega Wisata</span>
                         </div>
@@ -640,7 +921,7 @@
                                         $diskon = $harga * ($diskonPersen / 100);
                                         $hargaSetelahDiskon = $harga - $diskon;
                                     @endphp
-                                    <div class="col-12 col-md-3 mb-4">
+                                    <div class="col-12 col-md-6 col-lg-3 mb-4">
                                         <div class="product-item card border-0 shadow-sm h-100">
                                             <figure class="product-style m-0">
                                                 <img src="{{ asset($product->foto) }}"
@@ -771,7 +1052,7 @@
                         <h2 class="section-title">Review Jamaah</h2>
                     </div>
                     <div class="review-section">
-                        <h4 class="mb-3">
+                        <h4 class="mb-3 text-center">
                             Ulasan
                             <span class="badge bg-success">{{ count($filtered) }}</span>
                         </h4>
@@ -794,7 +1075,7 @@
                                 @endforeach
                             </div>
                         @else
-                            <div class="alert alert-info mt-3">
+                            <div class="alert alert-info mt-3 text-center">
                                 Belum ada ulasan untuk ditampilkan.
                             </div>
                         @endif
@@ -807,18 +1088,21 @@
     <footer id="footer" class="bg-dark text-white py-5">
         <div class="container text-center">
             <div class="row justify-content-center">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-8">
                     <div class="footer-item mb-4">
                         <div class="company-brand d-flex flex-column align-items-center">
-                            <img src="/booksaw/images/Logo PT.png" alt="Logo PT Sriwijaya Mega Wisata"
-                                class="footer-logo mb-3" style="max-width: 15vw; max-height: 100px;" loading="lazy">
-                            <p class="mb-3 fs-5">
+                            <img src="/booksaw/images/logo_pt.png" alt="Logo PT Sriwijaya Mega Wisata"
+                                class="footer-logo mb-3"
+                                style="max-width: clamp(100px, 15vw, 15vw); max-height: clamp(80px, 10vw, 100px);"
+                                loading="lazy">
+                            <p class="mb-3 fs-5" style="font-size: clamp(0.7rem, 1.2vw, 1rem);">
                                 Menjadi biro perjalanan yang mampu memberikan solusi dan nilai lebih suatu
                                 perjalanan.<br>
                                 <em>Insya Allah Haji, Umrah, dan Tour Anda bersama kami akan terasa <strong>"Aman,
                                         Nyaman, dan Berkesan"</strong>.</em>
                             </p>
-                            <div class="company-address text-secondary fs-6">
+                            <div class="company-address text-secondary fs-6"
+                                style="font-size: clamp(0.6rem, 1vw, 0.8rem);">
                                 <strong>Sriwijaya Mega Wisata</strong><br>
                                 Jl. Jendral Sudirman No. 75/09, 30126 - Palembang
                             </div>
@@ -830,20 +1114,30 @@
     </footer>
 
     <script>
-        // Hamburger Menu Toggle with Click-Outside Close
-        document.addEventListener('click', function(event) {
-            const hamburger = document.querySelector('.hamburger');
-            const menuList = document.querySelector('.menu-list');
-            if (!hamburger.contains(event.target) && !menuList.contains(event.target) && menuList.classList
-                .contains('show')) {
-                menuList.classList.remove('show');
-            }
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        const overlay = document.getElementById('overlay');
+
+        mobileMenuToggle.addEventListener('click', function() {
+            mobileMenu.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
         });
 
-        document.querySelector('.hamburger').addEventListener('click', function(event) {
-            event.stopPropagation(); // Prevent click from bubbling to document
-            const menuList = document.querySelector('.menu-list');
-            menuList.classList.toggle('show');
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        mobileMenuClose.addEventListener('click', closeMobileMenu);
+        overlay.addEventListener('click', closeMobileMenu);
+
+        // Close menu when clicking on links
+        document.querySelectorAll('.mobile-menu .nav-link').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
         });
 
         // Slick Slider Initialization
@@ -856,19 +1150,20 @@
                 dots: true,
                 autoplay: true,
                 autoplaySpeed: 5000,
+                fade: true,
                 responsive: [{
                         breakpoint: 991,
                         settings: {
                             arrows: true,
-                            dots: true,
+                            dots: false, // Sembunyikan dots di tablet
                             slidesToShow: 1
                         }
                     },
                     {
-                        breakpoint: 576,
+                        breakpoint: 767,
                         settings: {
-                            arrows: false,
-                            dots: true,
+                            arrows: true,
+                            dots: false, // Sembunyikan dots di mobile
                             slidesToShow: 1
                         }
                     }
