@@ -694,6 +694,9 @@
                             <li class="nav-item">
                                 <a href="{{ route('show.form') }}" class="nav-link px-3">Pendaftaran Haji</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm px-4">Login</a>
+                            </li>
                         </ul>
                         @if (Auth::check())
                             <form id="logout-form" action="{{ route('logout') }}" method="GET"
@@ -704,6 +707,7 @@
                                     aria-label="Logout">Logout</button>
                             </form>
                         @endif
+
                         <button class="hamburger d-lg-none" id="mobileMenuToggle" aria-label="Toggle menu">
                             <span class="bar"></span>
                             <span class="bar"></span>
